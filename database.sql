@@ -1,15 +1,18 @@
-CREATE TABLE IF NOT EXISTS urls (
-  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  name varchar(255) UNIQUE NOT NULL,
-  created_at date NOT NULL
+DROP TABLE IF EXISTS url_checks;
+DROP TABLE IF EXISTS urls;
+
+CREATE TABLE urls (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS url_checks(
-  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  url_id bigint NOT NULL REFERENCES urls (id) ON DELETE CASCADE,
-  status_code int,
-  h1 varchar(255),
-  title varchar(255),
-  description text,
-  created_at date NOT NULL
+CREATE TABLE url_checks (
+    id SERIAL PRIMARY KEY,
+    url_id INTEGER REFERENCES urls(id),
+    status_code INTEGER,
+    h1 TEXT,
+    title TEXT,
+    description TEXT,
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

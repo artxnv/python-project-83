@@ -1,39 +1,20 @@
-PORT ?= 8000
-
-dev:
-	poetry run flask --app page_analyzer:app run
-
-start:
-	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
-
-debug:
-	flask --app page_analyzer/app --debug run
+.SILENT:
 
 install:
 	poetry install
 
-lint:
-	poetry run flake8 --exclude=.venv/
-
-
-# создание шаблона базы данных
-database: db-create schema-load
-
-db-create:
-	createdb page_analyzer
-
-schema-load:
-	psql page_analyzer < database.sql
-
-
-# docker 
 build:
-	docker build -t page_analyzer .
+	./build.sh
 
-run:
-	docker run -it -p 8000:8000 page_analyzer
-# docker run --platform=linux/amd64 --name page_analyzer_container -p 8000:8000 page_analyzer
+publish:
+	poetry publish --dry-run
 
-docker:
-	docker compose up
+lint:
+	poetry run flake8 page_analyzer
 
+dev:
+	poetry run flask --app page_analyzer:app run
+
+PORT ?= 8000
+start:
+	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
